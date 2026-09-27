@@ -34,8 +34,11 @@ import {
   AlertCircle,
   Menu,
   X,
+  LogOut,
 } from 'lucide-react';
 import { schedulePostToGoogleCalendar } from './services/calendarService';
+import { useAuth } from './context/AuthContext';
+import { AuthScreen } from './components/AuthScreen';
 
 type NavigationTab =
   | 'dashboard'
@@ -48,6 +51,7 @@ type NavigationTab =
   | 'brand_kit';
 
 export default function App() {
+  const { currentUser, loading: authLoading, logout } = useAuth();
   const [activeTab, setActiveTab] = useState<NavigationTab>('dashboard');
   const [brandKit, setBrandKit] = useState<BrandKit>(DEFAULT_BRAND_KIT);
   const [posts, setPosts] = useState<PostItem[]>(INITIAL_POSTS);
@@ -61,6 +65,15 @@ export default function App() {
   const showToast = (msg: string) => {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(null), 3500);
+  };
+
+  const handleSignOut = async () => {
+    try {
+      await logout();
+      showToast('Signed out successfully');
+    } catch (err) {
+      showToast('Failed to sign out');
+    }
   };
 
   // Handlers for posts
@@ -148,6 +161,34 @@ export default function App() {
   const scheduledCount = posts.filter((p) => p.status === 'scheduled').length;
   const needsReviewCount = posts.filter((p) => p.status === 'needs_review').length;
   const publishedCount = posts.filter((p) => p.status === 'published').length;
+
+  if (authLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-slate-950 text-slate-100">
+        <div className="relative flex items-center justify-center mb-4">
+          <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center text-slate-950 shadow-2xl shadow-emerald-500/30 animate-pulse">
+            <Sparkles className="w-8 h-8 text-slate-950" />
+          </div>
+        </div>
+        <h2 className="text-lg font-bold text-white tracking-tight">Zulfiqar AI</h2>
+        <p className="text-xs text-emerald-400 font-mono mt-1">Authenticating session...</p>
+      </div>
+    );
+  }
+
+  if (!currentUser) {
+    return (
+      <>
+        {toastMessage && (
+          <div className="fixed bottom-5 right-5 z-50 flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 border border-emerald-500/50 text-emerald-300 text-xs font-semibold shadow-2xl animate-bounce">
+            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+            <span>{toastMessage}</span>
+          </div>
+        )}
+        <AuthScreen onSuccess={() => showToast('Signed in successfully!')} />
+      </>
+    );
+  }
 
   return (
     <div className="flex h-screen bg-slate-950 text-slate-100 font-sans overflow-hidden">
@@ -284,6 +325,40 @@ export default function App() {
           >
             Launch Setup Wizard &rarr;
           </button>
+
+          {/* User Profile & Sign Out (Desktop) */}
+          {currentUser && (
+            <div className="pt-2.5 mt-1 border-t border-slate-800/80 flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2 min-w-0">
+                {currentUser.photoURL ? (
+                  <img
+                    src={currentUser.photoURL}
+                    alt={currentUser.displayName || 'User'}
+                    className="w-7 h-7 rounded-full object-cover border border-emerald-500/50 shrink-0"
+                  />
+                ) : (
+                  <div className="w-7 h-7 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-emerald-400 font-bold text-xs shrink-0">
+                    {(currentUser.displayName || currentUser.email || 'U').charAt(0).toUpperCase()}
+                  </div>
+                )}
+                <div className="min-w-0">
+                  <p className="text-[11px] font-semibold text-slate-200 truncate">
+                    {currentUser.displayName || currentUser.email?.split('@')[0] || 'User'}
+                  </p>
+                  <p className="text-[9px] text-slate-500 truncate font-mono">
+                    {currentUser.email}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={handleSignOut}
+                title="Sign Out"
+                className="p-1.5 rounded-lg text-slate-400 hover:text-red-400 hover:bg-red-950/30 transition-all shrink-0 cursor-pointer"
+              >
+                <LogOut className="w-4 h-4" />
+              </button>
+            </div>
+          )}
         </div>
       </aside>
 
@@ -331,6 +406,30 @@ export default function App() {
                 {m.label}
               </button>
             ))}
+
+            {/* Mobile User Profile & Logout */}
+            {currentUser && (
+              <div className="pt-3 mt-2 border-t border-slate-800 flex items-center justify-between">
+                <div className="flex items-center gap-2 min-w-0">
+                  <div className="w-6 h-6 rounded-full bg-slate-800 text-emerald-400 flex items-center justify-center text-xs font-bold shrink-0">
+                    {(currentUser.displayName || currentUser.email || 'U').charAt(0).toUpperCase()}
+                  </div>
+                  <span className="text-xs text-slate-300 truncate max-w-[150px]">
+                    {currentUser.email}
+                  </span>
+                </div>
+                <button
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    handleSignOut();
+                  }}
+                  className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-red-950/40 text-red-300 border border-red-500/30 text-xs font-semibold hover:bg-red-900/50 cursor-pointer"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                  <span>Logout</span>
+                </button>
+              </div>
+            )}
           </div>
         )}
 
