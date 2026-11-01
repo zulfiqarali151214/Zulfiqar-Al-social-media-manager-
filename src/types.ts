@@ -1,4 +1,4 @@
-export type Platform = 'facebook' | 'instagram' | 'linkedin' | 'twitter';
+export type Platform = 'facebook' | 'instagram' | 'linkedin' | 'twitter' | 'tiktok' | 'whatsapp';
 
 export type ContentPillar =
   | 'educational'

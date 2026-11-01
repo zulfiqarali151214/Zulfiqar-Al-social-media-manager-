@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { SocialAccount, Platform } from '../types';
+import { PlatformIcon } from './PlatformIcon';
 import {
   Facebook,
-  Instagram,
   Linkedin,
-  Twitter,
   CheckCircle2,
   AlertTriangle,
   RefreshCw,
@@ -31,16 +30,7 @@ export const SocialAccountsManager: React.FC<SocialAccountsManagerProps> = ({
   const [connectingGcal, setConnectingGcal] = useState(false);
 
   const getPlatformIcon = (platform: Platform) => {
-    switch (platform) {
-      case 'facebook':
-        return <Facebook className="w-5 h-5 text-blue-400" />;
-      case 'instagram':
-        return <Instagram className="w-5 h-5 text-pink-400" />;
-      case 'linkedin':
-        return <Linkedin className="w-5 h-5 text-sky-400" />;
-      case 'twitter':
-        return <Twitter className="w-5 h-5 text-slate-200" />;
-    }
+    return <PlatformIcon platform={platform} className="w-5 h-5" />;
   };
 
   const handleConnectGoogleCalendar = async () => {

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { PostItem, ContentType, Platform } from '../types';
+import { PlatformIcon } from './PlatformIcon';
 import {
   Search,
   Filter,
@@ -8,10 +9,6 @@ import {
   Copy,
   Calendar,
   Layers,
-  Facebook,
-  Instagram,
-  Linkedin,
-  Twitter,
   Clock,
   CheckCircle2,
 } from 'lucide-react';
@@ -48,16 +45,7 @@ export const ContentLibrary: React.FC<ContentLibraryProps> = ({
   });
 
   const getPlatformIcon = (platform: Platform) => {
-    switch (platform) {
-      case 'facebook':
-        return <Facebook className="w-3.5 h-3.5 text-blue-400" />;
-      case 'instagram':
-        return <Instagram className="w-3.5 h-3.5 text-pink-400" />;
-      case 'linkedin':
-        return <Linkedin className="w-3.5 h-3.5 text-sky-400" />;
-      case 'twitter':
-        return <Twitter className="w-3.5 h-3.5 text-slate-300" />;
-    }
+    return <PlatformIcon platform={platform} className="w-3.5 h-3.5" />;
   };
 
   return (

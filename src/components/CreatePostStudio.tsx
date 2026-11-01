@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { PostItem, BrandKit, ContentType, Platform } from '../types';
 import { GraphicCanvas } from './GraphicCanvas';
+import { PlatformIcon, PLATFORM_LABELS } from './PlatformIcon';
 import {
   Sparkles,
   Quote,
@@ -61,7 +62,14 @@ export const CreatePostStudio: React.FC<CreatePostStudioProps> = ({
     setLoading(true);
     setNotice(null);
     try {
+      const platformNote =
+        platform === 'tiktok'
+          ? 'Format: short-form TikTok video script/caption with a 2-second hook, fast pacing and trending-style hashtags.'
+          : platform === 'whatsapp'
+          ? 'Format: concise WhatsApp broadcast/status message, conversational, 1-2 emojis max, no hashtags needed, ending with a clear reply/click-to-chat CTA.'
+          : '';
       const prompt = `Create a high-converting ${platform} post about: "${topic}".
+${platformNote}
 Business: "${brandKit.businessName}", Niche: "${brandKit.niche}".
 Brand Tone: ${brandKit.brandTone}.
 Target: ${brandKit.targetAudience} in ${brandKit.targetLocation}.
@@ -317,18 +325,19 @@ Return JSON:
                 <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">
                   Platform Target
                 </label>
-                <div className="grid grid-cols-4 gap-2">
-                  {(['facebook', 'instagram', 'linkedin', 'twitter'] as const).map((p) => (
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                  {(['facebook', 'instagram', 'linkedin', 'twitter', 'tiktok', 'whatsapp'] as const).map((p) => (
                     <button
                       key={p}
                       onClick={() => setPlatform(p)}
-                      className={`py-2 px-3 rounded-xl text-xs font-bold capitalize border transition-all ${
+                      className={`flex items-center justify-center gap-2 py-2 px-3 rounded-xl text-xs font-bold border transition-all ${
                         platform === p
                           ? 'border-emerald-500 bg-emerald-500/20 text-emerald-300'
                           : 'border-slate-800 bg-slate-950 text-slate-400'
                       }`}
                     >
-                      {p}
+                      <PlatformIcon platform={p} className="w-3.5 h-3.5" />
+                      <span>{PLATFORM_LABELS[p]}</span>
                     </button>
                   ))}
                 </div>

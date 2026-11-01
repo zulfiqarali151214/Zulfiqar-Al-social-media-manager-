@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { PostItem, BrandKit, Platform } from '../types';
+import { PlatformIcon } from './PlatformIcon';
 import {
   Calendar as CalendarIcon,
   ChevronLeft,
@@ -11,10 +12,6 @@ import {
   SlidersHorizontal,
   Plus,
   Layers,
-  Facebook,
-  Instagram,
-  Linkedin,
-  Twitter,
 } from 'lucide-react';
 import { schedulePostToGoogleCalendar } from '../services/calendarService';
 
@@ -57,16 +54,7 @@ export const ContentCalendar: React.FC<ContentCalendarProps> = ({
   });
 
   const getPlatformIcon = (platform: Platform) => {
-    switch (platform) {
-      case 'facebook':
-        return <Facebook className="w-3 h-3 text-blue-400" />;
-      case 'instagram':
-        return <Instagram className="w-3 h-3 text-pink-400" />;
-      case 'linkedin':
-        return <Linkedin className="w-3 h-3 text-sky-400" />;
-      case 'twitter':
-        return <Twitter className="w-3 h-3 text-slate-300" />;
-    }
+    return <PlatformIcon platform={platform} className="w-3 h-3" />;
   };
 
   const getStatusBadge = (status: string) => {
@@ -137,7 +125,7 @@ export const ContentCalendar: React.FC<ContentCalendarProps> = ({
         <div className="flex flex-wrap items-center gap-2">
           {/* Platform Filter */}
           <div className="flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs">
-            {['all', 'facebook', 'instagram', 'linkedin', 'twitter'].map((plat) => (
+            {['all', 'facebook', 'instagram', 'linkedin', 'twitter', 'tiktok', 'whatsapp'].map((plat) => (
               <button
                 key={plat}
                 onClick={() => setFilterPlatform(plat)}

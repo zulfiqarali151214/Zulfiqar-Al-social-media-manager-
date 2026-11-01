@@ -35,7 +35,7 @@ Modest Imagery Rule: ${brandKit.modestImageryRule ? 'True (strictly modest hijab
 Return a JSON array of ${Math.min(days, 7)} planned posts covering diverse content pillars (educational, problem_solution, authority, engagement, promotional, inspirational).
 Each post item in the array must be an object with:
 - title: string
-- platform: "facebook" | "instagram" | "linkedin" | "twitter"
+- platform: "facebook" | "instagram" | "linkedin" | "twitter" | "tiktok" | "whatsapp"
 - contentType: "single_image" | "quote" | "educational" | "promotional" | "carousel" | "tips" | "case_study"
 - pillar: "educational" | "problem_solution" | "authority" | "engagement" | "promotional" | "inspirational"
 - language: "en" | "roman_ur" | "ur"
